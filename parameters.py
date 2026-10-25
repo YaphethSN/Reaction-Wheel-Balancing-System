@@ -5,7 +5,8 @@ class PendulumParameters:
     mass: float = 0.5   
     rod_length: float = 0.2 
     gravity: float = 9.81   
-
+    damping: float = 0.005
+    
     @property
     def com_distance(self):
         return self.rod_length / 2

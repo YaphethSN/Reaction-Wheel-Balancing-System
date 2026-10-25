@@ -1,6 +1,19 @@
 import numpy as np
 
-def pendulAccel(thetha, mass, gravity, length, inertia):
-    torque = mass * gravity * length * np.sin(thetha)
-    return torque / inertia
+def pendulAccel(theta, params):
+    torque = (
+        params.mass
+        * params.gravity
+        * params.com_distance
+        * np.sin(theta)
+    )
 
+    return torque / params.inertia
+
+
+def pendulDynms(t, state, params):
+    theta, omega = state
+
+    alpha = pendulAccel(theta, params)
+
+    return [omega, alpha]

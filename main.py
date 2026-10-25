@@ -2,14 +2,14 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
-
+from visual import animate_pendulum
 from physics import pendulDynms
 from parameters import PendulumParameters
 
 params = PendulumParameters()
 
 theta0 = np.radians(10)
-omega0 = 0.0
+omega0 = 0
 
 start_time = 0
 end_time = 3
@@ -39,11 +39,39 @@ plt.plot(
     label="Pendulum angle"
 )
 
-plt.xlabel("Time (s)")
-plt.ylabel("Angle from upright (degrees)")
-plt.title("Uncontrolled Inverted Pendulum")
+plt.xlabel("Time")
+plt.ylabel("Angle")
+plt.title("pendulum")
 plt.grid(True)
 plt.legend()
 plt.tight_layout()
+
+animation = animate_pendulum(solution, params)
+
+kinetic_energy = 0.5 * params.inertia * omega**2
+
+potential_energy = (
+    params.mass
+    * params.gravity
+    * params.com_distance
+    * np.cos(theta)
+)
+
+total_energy = kinetic_energy + potential_energy
+
+plt.figure(figsize=(10, 5))
+plt.plot(solution.t, kinetic_energy, label="KE")
+plt.plot(solution.t, potential_energy, label="GPE")
+plt.plot(solution.t, total_energy, label="sigmaE")
+
+plt.xlabel("Time")
+plt.ylabel("Energy")
+plt.title("GPE")
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+
+energy_error = np.max(np.abs(total_energy - total_energy[0]))
+print(f"energy drift: {energy_error:.8e} J")
 
 plt.show()
